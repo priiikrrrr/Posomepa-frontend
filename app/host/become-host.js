@@ -69,7 +69,6 @@ export default function BecomeHostScreen() {
         if (savedStep) setCurrentStep(Number(savedStep));
         if (savedData) setFormData(JSON.parse(savedData));
       } catch (e) {
-        console.log('Restore error:', e);
       }
     };
     restoreState();
@@ -122,7 +121,6 @@ export default function BecomeHostScreen() {
         setter(result.assets[0]);
       }
     } catch (error) {
-      console.log('Camera error:', error);
       await pickImage(setter);
     }
   };
@@ -329,7 +327,6 @@ export default function BecomeHostScreen() {
         ]);
       }
     } catch (error) {
-      console.log('Submit error:', error);
       Alert.alert('Error', error.response?.data?.message || 'Failed to submit application');
     } finally {
       setSubmitting(false);

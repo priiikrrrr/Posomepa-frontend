@@ -47,21 +47,16 @@ export default function OTPLoginScreen() {
 
     try {
       const formattedPhone = `+91${phone}`;
-      console.log('Sending OTP to:', formattedPhone);
-      
       const result = await firebaseAuth.signInWithPhone(formattedPhone);
       
       if (result.success) {
-        console.log('OTP sent successfully via Firebase');
         setConfirmation(result.confirmation);
         setStep('otp');
         setResendTimer(RESEND_TIMER);
       } else {
-        console.log('Firebase OTP Error:', result.error);
         Alert.alert('Error', result.error || 'Failed to send OTP');
       }
     } catch (error) {
-      console.log('OTP Send Error:', error);
       Alert.alert('Error', 'Failed to send OTP. Please try again.');
     } finally {
       setLoading(false);
@@ -83,13 +78,12 @@ export default function OTPLoginScreen() {
     setLoading(true);
 
     try {
-      console.log('Verifying OTP with Firebase...');
       const result = await firebaseAuth.confirmOTP(confirmation, currentOtp);
       
       if (result.success) {
-        console.log('Firebase OTP verified successfully');
-        
-        // Get existing token and user if user is already logged in (Google login)
+        const existingToken = await storage.getItem('token');
+        const existingUserStr = await storage.getItem('user');
+        const existingUser = existingUserStr ? JSON.parse(existingUserStr) : null;
         const existingToken = await storage.getItem('token');
         const existingUserStr = await storage.getItem('user');
         const existingUser = existingUserStr ? JSON.parse(existingUserStr) : null;
@@ -137,7 +131,6 @@ export default function OTPLoginScreen() {
           const userResponse = await authAPI.getMe();
           updateUser(userResponse.data);
         } catch (e) {
-          console.log('Could not refetch user:', e);
         }
         
         if (params.redirect === 'host' || params.redirect === 'admin') {
@@ -149,7 +142,6 @@ export default function OTPLoginScreen() {
         Alert.alert('Error', result.error || 'Invalid OTP');
       }
     } catch (error) {
-      console.log('OTP Verify Error:', error);
       Alert.alert('Error', error.response?.data?.message || 'Failed to verify OTP');
     } finally {
       setLoading(false);
@@ -209,7 +201,6 @@ export default function OTPLoginScreen() {
         const userResponse = await authAPI.getMe();
         updateUser(userResponse.data);
       } catch (e) {
-        console.log('Could not refetch user:', e);
       }
       
       if (params.redirect === 'host' || params.redirect === 'admin') {

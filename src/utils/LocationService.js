@@ -31,7 +31,6 @@ const LocationService = {
         longitude: location.coords.longitude
       };
     } catch (error) {
-      console.log('Get location error:', error);
       throw error;
     }
   }

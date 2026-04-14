@@ -5,11 +5,7 @@ import { Platform } from 'react-native';
 const getBaseUrl = () => {
   if (Platform.OS === 'web') return 'http://localhost:5000/api';
   if (Platform.OS === 'ios') return 'http://localhost:5000/api';
-  
-  // Render production URL
-  const url = 'https://posomepa.onrender.com/api';
-  console.log('Using API URL:', url);
-  return url;
+  return 'https://posomepa.onrender.com/api';
 };
 
 
@@ -26,7 +22,6 @@ const storage = {
       const value = await AsyncStorage.getItem(key);
       return value;
     } catch (error) {
-      console.log('Storage getItem error:', error);
       return null;
     }
   },
@@ -58,14 +53,10 @@ export const api = axios.create({
 api.interceptors.request.use(async (config) => {
   try {
     const token = await storage.getItem('token');
-    console.log('API Request:', config.url, '- Token:', token ? 'exists' : 'none');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
-    } else {
-      console.log('No token available for request to', config.url);
     }
   } catch (error) {
-    console.log('Token retrieval error:', error);
   }
   return config;
 });
@@ -73,15 +64,6 @@ api.interceptors.request.use(async (config) => {
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    console.log('API Error:', error.message);
-    console.log('API Error URL:', error.config?.url);
-    console.log('API Error Response:', error.response?.data);
-    if (error.code === 'ECONNABORTED') {
-      console.log('Request timeout - backend may not be running');
-    }
-    if (error.code === 'ERR_NETWORK') {
-      console.log('Network error - check if backend is running on', BASE_URL);
-    }
     return Promise.reject(error);
   }
 );
@@ -160,7 +142,6 @@ export const recommendationsAPI = {
 export const reviewsAPI = {
   add: async (data) => {
     const token = await storage.getItem('token');
-    console.log('reviewsAPI.add - Token:', token ? 'exists' : 'none');
     if (!token) {
       throw new Error('Not authenticated');
     }
@@ -197,12 +178,9 @@ export const uploadAPI = {
         type: type,
         name: name,
       });
-      
-      console.log(`Image ${index}: uri=${uri ? uri.substring(0, 50) : 'none'}, type=${type}, name=${name}`);
     });
 
     const token = await storage.getItem('token');
-    console.log('Making upload request to:', `${BASE_URL}/upload/images`);
     
     const response = await axios.post(`${BASE_URL}/upload/images`, formData, {
       headers: {
@@ -212,7 +190,6 @@ export const uploadAPI = {
       timeout: 60000,
     });
     
-    console.log('Upload response:', response.data);
     return response;
   },
 };
