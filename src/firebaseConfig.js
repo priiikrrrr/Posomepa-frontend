@@ -3,12 +3,12 @@ import { getAuth } from 'firebase/auth';
 import { getMessaging } from 'firebase/messaging';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAlE-k0CB14gkPvTpriSlG6PIAnrIj9yGA",
-  authDomain: "posummpaa.firebaseapp.com",
-  projectId: "posummpaa",
-  storageBucket: "posummpaa.firebasestorage.app",
-  messagingSenderId: "536198966274",
-  appId: "1:536198966274:android:208cd96a3be5af3e6f8b1b"
+  apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID
 };
 
 const app = initializeApp(firebaseConfig);
