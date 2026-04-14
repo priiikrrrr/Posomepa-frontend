@@ -1,0 +1,66 @@
+{
+  "expo": {
+    "name": "PosomePa",
+    "slug": "posomepa",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "scheme": "posomepa",
+    "splash": {
+      "resizeMode": "contain",
+      "backgroundColor": "#8B5CF6"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.leaselink.app",
+      "infoPlist": {
+        "NSCameraUsageDescription": "We need camera access for selfie verification and property photos.",
+        "NSPhotoLibraryUsageDescription": "We need photo access for document and property image uploads."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#8B5CF6"
+      },
+      "package": "com.leaselink.app",
+      "googleServicesFile": "./google-services.json",
+      "largeHeap": true,
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.READ_MEDIA_IMAGES"
+      ],
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyC6qex_qEIdfx508HDZufIkxVqGierqO1U"
+        }
+      }
+    },
+    "web": {
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-image-picker",
+        {
+          "cameraPermission": "Allow PosomePa to access your camera for selfie verification and property photos.",
+          "photosPermission": "Allow PosomePa to access your photos for document and property image uploads."
+        }
+      ]
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "5d9da69c-dd57-46ea-980a-4d69f5143528"
+      }
+    },
+    "owner": "priyakharwar123"
+  }
+}
