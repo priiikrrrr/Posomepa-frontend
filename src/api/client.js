@@ -3,9 +3,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Platform } from 'react-native';
 
 const getBaseUrl = () => {
-  if (Platform.OS === 'web') return 'http://localhost:5000/api';
-  if (Platform.OS === 'ios') return 'http://localhost:5000/api';
-  return 'https://posomepa.onrender.com/api';
+  if (Platform.OS === 'web') return process.env.EXPO_PUBLIC_API_URL || 'http://localhost:5000/api';
+  if (Platform.OS === 'ios') return process.env.EXPO_PUBLIC_API_URL || 'http://localhost:5000/api';
+  return process.env.EXPO_PUBLIC_API_URL || 'https://posomepa.onrender.com/api';
 };
 
 

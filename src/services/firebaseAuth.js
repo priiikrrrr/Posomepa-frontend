@@ -3,7 +3,7 @@ import messaging from '@react-native-firebase/messaging';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 GoogleSignin.configure({
-  webClientId: '536198966274-eduhm7s0loadkmgn2qmada319tf9s8qa.apps.googleusercontent.com',
+  webClientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
   offlineAccess: true,
   scopes: ['profile', 'email'],
 });

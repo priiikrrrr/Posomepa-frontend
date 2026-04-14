@@ -6,3 +6,4 @@ android/
 .env
 .env.local
 .env.production
+google-services.json
