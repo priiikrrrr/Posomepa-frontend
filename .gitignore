@@ -8,3 +8,4 @@ android/
 .env.production
 google-services.json
 dist/
+*.apk

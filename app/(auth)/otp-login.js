@@ -84,9 +84,6 @@ export default function OTPLoginScreen() {
         const existingToken = await storage.getItem('token');
         const existingUserStr = await storage.getItem('user');
         const existingUser = existingUserStr ? JSON.parse(existingUserStr) : null;
-        const existingToken = await storage.getItem('token');
-        const existingUserStr = await storage.getItem('user');
-        const existingUser = existingUserStr ? JSON.parse(existingUserStr) : null;
         
         // Send Firebase token to backend for verification and login
         const response = await authAPI.verifyFirebasePhone({
