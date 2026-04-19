@@ -69,9 +69,9 @@ const HowItWorks = () => (
 );
 const hw = StyleSheet.create({
   row:   { flexDirection: "row", alignItems: "center", justifyContent: "center", marginTop: 24, gap: 6 },
-  pill:  { flexDirection: "row", alignItems: "center", gap: 5, backgroundColor: "rgba(167,139,250,0.10)", borderWidth: 1, borderColor: "rgba(167,139,250,0.22)", borderRadius: 30, paddingVertical: 8, paddingHorizontal: 13 },
-  label: { fontSize: 12, fontWeight: "600", color: "#6D4FA8", letterSpacing: 0.1 },
-  arrow: { fontSize: 16, color: "rgba(167,139,250,0.4)", fontWeight: "300", marginHorizontal: 2 },
+  pill:  { flexDirection: "row", alignItems: "center", gap: 5, paddingVertical: 4, paddingHorizontal: 8 },
+  label: { fontSize: 12, fontWeight: "500", color: "#6D4FA8", letterSpacing: 0.1 },
+  arrow: { fontSize: 14, color: "rgba(167,139,250,0.4)", fontWeight: "300", marginHorizontal: 2 },
 });
 
 /* ── LandingScreen ── */

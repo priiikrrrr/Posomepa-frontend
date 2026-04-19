@@ -106,11 +106,10 @@ const GlowAvatar = ({ user, isDark }) => {
 
 // ─── Theme toggle ─────────────────────────────────────────────────────────────
 const ThemeToggle = ({ colors }) => {
-  const { setTheme, userPreference, activeScheme } = useTheme();
-  const active = userPreference ?? 'system';
+  const { setTheme, userPreference } = useTheme();
+  const active = userPreference || 'light';
   const opts = [
     { k: 'light',  icon: 'sunny-outline' },
-    { k: 'system', icon: 'phone-portrait-outline' },
     { k: 'dark',   icon: 'moon-outline' },
   ];
   return (

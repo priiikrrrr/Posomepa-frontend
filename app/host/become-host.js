@@ -398,12 +398,19 @@ export default function BecomeHostScreen() {
               <TextInput
                 style={[styles.input, { backgroundColor: colors.surface, borderColor: colors.border, color: colors.textPrimary }]}
                 value={formData.email}
-                onChangeText={(v) => updateForm('email', v)}
+                onChangeText={(v) => updateForm('email', v.toLowerCase().trim())}
                 placeholder="Primary email"
                 placeholderTextColor={colors.textLight}
                 keyboardType="email-address"
                 autoCapitalize="none"
+                autoCorrect={false}
               />
+              {formData.email.length > 0 && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email) && (
+                <Text style={[styles.inputHint, { color: '#EF4444' }]}>Enter a valid email address</Text>
+              )}
+              {formData.email.length > 0 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email) && (
+                <Text style={[styles.inputHint, { color: '#16A34A' }]}>✓ Valid email</Text>
+              )}
             </View>
 
             <View style={styles.inputGroup}>
@@ -411,12 +418,19 @@ export default function BecomeHostScreen() {
               <TextInput
                 style={[styles.input, { backgroundColor: colors.surface, borderColor: colors.border, color: colors.textPrimary }]}
                 value={formData.alternateEmail}
-                onChangeText={(v) => updateForm('alternateEmail', v)}
+                onChangeText={(v) => updateForm('alternateEmail', v.toLowerCase().trim())}
                 placeholder="Optional"
                 placeholderTextColor={colors.textLight}
                 keyboardType="email-address"
                 autoCapitalize="none"
+                autoCorrect={false}
               />
+              {formData.alternateEmail.length > 0 && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.alternateEmail) && (
+                <Text style={[styles.inputHint, { color: '#EF4444' }]}>Enter a valid email address</Text>
+              )}
+              {formData.alternateEmail.length > 0 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.alternateEmail) && (
+                <Text style={[styles.inputHint, { color: '#16A34A' }]}>✓ Valid email</Text>
+              )}
             </View>
 
             <View style={styles.inputGroup}>
@@ -424,11 +438,18 @@ export default function BecomeHostScreen() {
               <TextInput
                 style={[styles.input, { backgroundColor: colors.surface, borderColor: colors.border, color: colors.textPrimary }]}
                 value={formData.phone}
-                onChangeText={(v) => updateForm('phone', v)}
-                placeholder="Primary phone"
+                onChangeText={(v) => updateForm('phone', v.replace(/\D/g, '').slice(0, 10))}
+                placeholder="10-digit phone number"
                 placeholderTextColor={colors.textLight}
                 keyboardType="phone-pad"
+                maxLength={10}
               />
+              {formData.phone.length > 0 && formData.phone.length < 10 && (
+                <Text style={[styles.inputHint, { color: '#EF4444' }]}>{10 - formData.phone.length} more digits needed</Text>
+              )}
+              {formData.phone.length === 10 && (
+                <Text style={[styles.inputHint, { color: '#16A34A' }]}>✓ Valid phone number</Text>
+              )}
             </View>
 
             <View style={styles.inputGroup}>
@@ -436,11 +457,18 @@ export default function BecomeHostScreen() {
               <TextInput
                 style={[styles.input, { backgroundColor: colors.surface, borderColor: colors.border, color: colors.textPrimary }]}
                 value={formData.alternatePhone}
-                onChangeText={(v) => updateForm('alternatePhone', v)}
-                placeholder="Optional"
+                onChangeText={(v) => updateForm('alternatePhone', v.replace(/\D/g, '').slice(0, 10))}
+                placeholder="10-digit phone number"
                 placeholderTextColor={colors.textLight}
                 keyboardType="phone-pad"
+                maxLength={10}
               />
+              {formData.alternatePhone.length > 0 && formData.alternatePhone.length < 10 && (
+                <Text style={[styles.inputHint, { color: '#EF4444' }]}>{10 - formData.alternatePhone.length} more digits needed</Text>
+              )}
+              {formData.alternatePhone.length === 10 && (
+                <Text style={[styles.inputHint, { color: '#16A34A' }]}>✓ Valid phone number</Text>
+              )}
             </View>
           </View>
         );
@@ -452,7 +480,7 @@ export default function BecomeHostScreen() {
             <Text style={[styles.stepDesc, { color: colors.textSecondary }]}>Is this a personal property or a business?</Text>
             
             <TouchableOpacity
-              style={[styles.optionCard, formData.serviceType === 'personal' && { borderColor: colors.primary, backgroundColor: colors.primary + '15' }, { backgroundColor: colors.surface, borderColor: colors.border }]}
+              style={[styles.optionCard, { backgroundColor: colors.surface, borderColor: colors.border }, formData.serviceType === 'personal' && { borderColor: colors.primary, backgroundColor: colors.primary + '15' }]}
               onPress={() => updateForm('serviceType', 'personal')}
             >
               <Ionicons 
@@ -467,7 +495,7 @@ export default function BecomeHostScreen() {
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={[styles.optionCard, formData.serviceType === 'business' && { borderColor: colors.primary, backgroundColor: colors.primary + '15' }, { backgroundColor: colors.surface, borderColor: colors.border }]}
+              style={[styles.optionCard, { backgroundColor: colors.surface, borderColor: colors.border }, formData.serviceType === 'business' && { borderColor: colors.primary, backgroundColor: colors.primary + '15' }]}
               onPress={() => updateForm('serviceType', 'business')}
             >
               <Ionicons 
@@ -506,10 +534,10 @@ export default function BecomeHostScreen() {
                 {['pan', 'aadhaar', 'passport'].map((type) => (
                   <TouchableOpacity
                     key={type}
-                    style={[styles.idTypeBtn, formData.idType === type && { borderColor: colors.primary, backgroundColor: colors.primary }, { borderColor: colors.border, backgroundColor: colors.surface }]}
+                    style={[styles.idTypeBtn, { borderColor: colors.border, backgroundColor: colors.surface }, formData.idType === type && { borderColor: colors.primary, backgroundColor: colors.primary }]}
                     onPress={() => updateForm('idType', type)}
                   >
-                    <Text style={[styles.idTypeText, formData.idType === type && { color: '#FFFFFF' }, { color: colors.textPrimary }]}>
+                    <Text style={[styles.idTypeText, { color: colors.textPrimary }, formData.idType === type && { color: '#FFFFFF' }]}>
                       {type.toUpperCase()}
                     </Text>
                   </TouchableOpacity>
@@ -537,7 +565,7 @@ export default function BecomeHostScreen() {
                 keyboardType={formData.idType === 'aadhaar' ? 'numeric' : 'default'}
                 maxLength={formData.idType === 'aadhaar' ? 12 : formData.idType === 'pan' ? 10 : 20}
               />
-              <Text style={styles.inputHint}>
+              <Text style={[styles.inputHint, { color: colors.textSecondary }]}>
                 {formData.idType === 'aadhaar' && 'Format: 12 digits (e.g., 123456789012)'}
                 {formData.idType === 'pan' && 'Format: ABCDE1234F'}
                 {formData.idType === 'passport' && 'Format: A1234567'}
@@ -685,7 +713,7 @@ export default function BecomeHostScreen() {
                 keyboardType="number-pad"
                 maxLength={18}
               />
-              <Text style={styles.inputHint}>9-18 digits</Text>
+              <Text style={[styles.inputHint, { color: colors.textSecondary }]}>9-18 digits</Text>
             </View>
 
             <View style={styles.inputGroup}>
@@ -699,7 +727,7 @@ export default function BecomeHostScreen() {
                 autoCapitalize="characters"
                 maxLength={11}
               />
-              <Text style={styles.inputHint}>11 characters (e.g., SBIN0001234)</Text>
+              <Text style={[styles.inputHint, { color: colors.textSecondary }]}>11 characters (e.g., SBIN0001234)</Text>
             </View>
 
             <View style={styles.inputGroup}>
@@ -736,7 +764,7 @@ export default function BecomeHostScreen() {
                 placeholderTextColor={colors.textLight}
                 autoCapitalize="none"
               />
-              <Text style={styles.inputHint}>For faster payments (optional)</Text>
+              <Text style={[styles.inputHint, { color: colors.textSecondary }]}>For faster payments (optional)</Text>
             </View>
           </View>
         );
