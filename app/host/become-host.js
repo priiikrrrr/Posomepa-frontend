@@ -32,6 +32,7 @@ export default function BecomeHostScreen() {
   const [submitting, setSubmitting] = useState(false);
   const [guidelinesAccepted, setGuidelinesAccepted] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState({ terms: false, responsibility: false, verification: false });
+  const [rejectionInfo, setRejectionInfo] = useState(null);
 
   // Form data
   const [formData, setFormData] = useState({
@@ -72,6 +73,21 @@ export default function BecomeHostScreen() {
       }
     };
     restoreState();
+  }, []);
+
+  // Check rejection info on mount
+  useEffect(() => {
+    const checkRejectionStatus = async () => {
+      try {
+        const response = await hostApplicationAPI.getRejectionInfo();
+        if (response.data) {
+          setRejectionInfo(response.data);
+        }
+      } catch (e) {
+        // Not critical - continue normally
+      }
+    };
+    checkRejectionStatus();
   }, []);
 
   const updateForm = (key, value) => {
@@ -127,13 +143,33 @@ export default function BecomeHostScreen() {
 
   const validateStep = () => {
     switch (currentStep) {
-      case 0: // Welcome - just check guidelines accepted
+      case 0: // Welcome - check guidelines and rejection status
+        // Check if user was previously rejected and cooldown not over
+        if (rejectionInfo && !rejectionInfo.canApply) {
+          const hours = rejectionInfo.hoursRemaining || Math.ceil((rejectionInfo.minutesRemaining || 0) / 60);
+          const timeText = rejectionInfo.timeRemaining || `${rejectionInfo.minutesRemaining} minutes`;
+          Alert.alert(
+            'Application Rejected',
+            `Your previous application was rejected.\n\nReason: ${rejectionInfo.rejectionReason}\n\nYou can reapply after ${timeText}.`,
+            [{ text: 'OK' }]
+          );
+          return false;
+        }
         if (!guidelinesAccepted) {
           Alert.alert('Required', 'Please accept the guidelines to continue');
           return false;
         }
         return true;
-      case 1: // Basic Info
+      case 1: // Basic Info - also check rejection status
+        if (rejectionInfo && !rejectionInfo.canApply) {
+          const timeText = rejectionInfo.timeRemaining || `${rejectionInfo.minutesRemaining} minutes`;
+          Alert.alert(
+            'Application Rejected',
+            `Your previous application was rejected.\n\nReason: ${rejectionInfo.rejectionReason}\n\nYou can reapply after ${timeText}.`,
+            [{ text: 'OK' }]
+          );
+          return false;
+        }
         if (!formData.fullName || !formData.email || !formData.phone) {
           Alert.alert('Required', 'Please fill all required fields');
           return false;
@@ -147,6 +183,20 @@ export default function BecomeHostScreen() {
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
           Alert.alert('Invalid Email', 'Please enter a valid email address');
           return false;
+        }
+        // Validate alternate phone if provided (must be 10 digits)
+        if (formData.alternatePhone && formData.alternatePhone.length > 0) {
+          if (!/^\d{10}$/.test(formData.alternatePhone.replace(/\D/g, ''))) {
+            Alert.alert('Invalid Phone', 'Alternate phone must be 10 digits');
+            return false;
+          }
+        }
+        // Validate alternate email if provided (must be valid format)
+        if (formData.alternateEmail && formData.alternateEmail.length > 0) {
+          if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.alternateEmail)) {
+            Alert.alert('Invalid Email', 'Please enter a valid alternate email address');
+            return false;
+          }
         }
         return true;
       case 2: // Service Type

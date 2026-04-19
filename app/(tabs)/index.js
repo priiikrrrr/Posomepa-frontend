@@ -453,7 +453,7 @@ function PremiumCategoryChip({ category, selected, onPress, colors }) {
 const pcStyles = StyleSheet.create({
   chip: { flexDirection: 'row', alignItems: 'center', gap: 5, paddingHorizontal: 14, paddingVertical: 9, borderRadius: 30, marginRight: 8, overflow: 'hidden', borderWidth: 1, borderColor: 'transparent' },
   chipSelected: { borderColor: '#8B5CF620' },
-  text: { fontSize: 12, fontWeight: '600' },
+  text: { fontSize: 13, fontWeight: '600' },
 });
 
 /* ─── Section Header ─── */

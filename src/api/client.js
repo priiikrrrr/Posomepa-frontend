@@ -213,6 +213,7 @@ export const hostApplicationAPI = {
     return response;
   },
   resubmit: () => api.post('/host-applications/resubmit'),
+  getRejectionInfo: () => api.get('/host-applications/rejection-info'),
 };
 
 export const messagesAPI = {
