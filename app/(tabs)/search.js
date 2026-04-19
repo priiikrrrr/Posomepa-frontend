@@ -159,7 +159,7 @@ export default function SearchScreen() {
   const [aiSearchQuery, setAiSearchQuery] = useState('');
   const slideAnim = useRef(new Animated.Value(300)).current;
 
-  const currentHeaderTheme = getHeaderTheme(isDark);
+  const currentHeaderTheme = getHeaderTheme(isDark) || headerGradients.home.light;
 
   const wave1 = useRef(new Animated.Value(0)).current;
   const wave2 = useRef(new Animated.Value(0)).current;

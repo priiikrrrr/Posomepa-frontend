@@ -493,7 +493,7 @@ export default function HomeScreen() {
   const [gridPageIndex, setGridPageIndex] = useState(0);
   const gridPageWidth = SCREEN_WIDTH - 32;
 
-  const currentHeaderTheme = getHeaderTheme(isDark);
+  const currentHeaderTheme = getHeaderTheme(isDark) || headerGradients.home.light;
 
   const wave1 = useRef(new Animated.Value(0)).current;
   const wave2 = useRef(new Animated.Value(0)).current;
