@@ -451,9 +451,9 @@ function PremiumCategoryChip({ category, selected, onPress, colors }) {
   );
 }
 const pcStyles = StyleSheet.create({
-  chip: { flexDirection: 'row', alignItems: 'center', gap: 5, paddingHorizontal: 14, paddingVertical: 9, borderRadius: 30, marginRight: 8, overflow: 'hidden', borderWidth: 1, borderColor: 'transparent' },
+  chip: { flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: 10, paddingVertical: 8, borderRadius: 24, marginRight: 6, overflow: 'hidden', borderWidth: 1, borderColor: 'transparent' },
   chipSelected: { borderColor: '#8B5CF620' },
-  text: { fontSize: 13, fontWeight: '600' },
+  text: { fontSize: 11, fontWeight: '600' },
 });
 
 /* ─── Section Header ─── */
