@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   View, Text, TextInput, FlatList, TouchableOpacity, StyleSheet, Modal,
   Animated, Alert, ActivityIndicator, ScrollView, SafeAreaView, StatusBar,
   Dimensions, ImageBackground, AsyncStorage, Platform
 } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useRouter, useFocusEffect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useQuery, useMutation } from '@tanstack/react-query';
@@ -25,18 +25,25 @@ function GridSpaceCard({ space, onPress, colors }) {
   const likeScaleAnim = useRef(new Animated.Value(1)).current;
   const [isLiked, setIsLiked] = useState(false);
 
-  useEffect(() => {
-    const checkLiked = async () => {
-      try {
-        const stored = await AsyncStorage.getItem(LIKED_STORAGE_KEY);
-        if (stored) {
-          const likedIds = JSON.parse(stored);
-          setIsLiked(likedIds.includes(space._id));
+  useFocusEffect(
+    useCallback(() => {
+      const checkLiked = async () => {
+        try {
+          const stored = await AsyncStorage.getItem(LIKED_STORAGE_KEY);
+          if (stored) {
+            const likedIds = JSON.parse(stored);
+            setIsLiked(likedIds.includes(space._id));
+          } else {
+            setIsLiked(false);
+          }
+        } catch (e) { 
+          console.log('Error checking like:', e); 
+          setIsLiked(false);
         }
-      } catch (e) {}
-    };
-    checkLiked();
-  }, [space._id]);
+      };
+      checkLiked();
+    }, [space._id])
+  );
 
   const handleLike = async (e) => {
     e.stopPropagation();

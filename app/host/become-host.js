@@ -61,6 +61,7 @@ export default function BecomeHostScreen() {
   const [selfieImage, setSelfieImage] = useState(null);
   const [addressProofImage, setAddressProofImage] = useState(null);
   const [businessProofImage, setBusinessProofImage] = useState(null);
+  const [cancelledChequeImage, setCancelledChequeImage] = useState(null);
 
   useEffect(() => {
     const restoreState = async () => {
@@ -288,6 +289,10 @@ export default function BecomeHostScreen() {
           Alert.alert('Required', 'Please enter bank name');
           return false;
         }
+        if (!cancelledChequeImage) {
+          Alert.alert('Required', 'Please upload cancelled cheque');
+          return false;
+        }
         return true;
       default:
         return true;
@@ -363,6 +368,14 @@ export default function BecomeHostScreen() {
           uri: formatUri(businessProofImage.uri),
           type: businessProofImage.mimeType ?? businessProofImage.type ?? 'image/jpeg',
           name: 'business_proof.jpg',
+        });
+      }
+
+      if (cancelledChequeImage) {
+        data.append('cancelledCheque', {
+          uri: formatUri(cancelledChequeImage.uri),
+          type: cancelledChequeImage.mimeType ?? cancelledChequeImage.type ?? 'image/jpeg',
+          name: 'cancelled_cheque.jpg',
         });
       }
 
@@ -816,6 +829,21 @@ export default function BecomeHostScreen() {
               />
               <Text style={[styles.inputHint, { color: colors.textSecondary }]}>For faster payments (optional)</Text>
             </View>
+
+            <View style={styles.inputGroup}>
+              <Text style={[styles.label, { color: colors.textPrimary }]}>Upload Cancelled Cheque *</Text>
+              <TouchableOpacity style={[styles.uploadBox, { backgroundColor: colors.surface, borderColor: colors.border }]} onPress={() => pickImage(setCancelledChequeImage)}>
+                {cancelledChequeImage ? (
+                  <Image source={{ uri: cancelledChequeImage.uri }} style={styles.uploadedImage} />
+                ) : (
+                  <View style={styles.uploadPlaceholder}>
+                    <Ionicons name="document-text" size={48} color={colors.textLight} />
+                    <Text style={[styles.uploadText, { color: colors.textLight }]}>Tap to upload cancelled cheque</Text>
+                    <Text style={[styles.inputHint, { color: colors.textSecondary }]}>JPG, PNG, JPEG</Text>
+                  </View>
+                )}
+              </TouchableOpacity>
+            </View>
           </View>
         );
 
@@ -861,6 +889,7 @@ export default function BecomeHostScreen() {
               <Text style={[styles.reviewItem, { color: colors.textPrimary }]}>IFSC: {formData.ifscCode}</Text>
               <Text style={[styles.reviewItem, { color: colors.textPrimary }]}>Branch: {formData.bankBranch}</Text>
               {formData.upiId ? <Text style={[styles.reviewItem, { color: colors.textPrimary }]}>UPI: {formData.upiId}</Text> : null}
+              <Text style={[styles.reviewItem, { color: colors.textPrimary }]}>Cancelled Cheque: {cancelledChequeImage ? '✓ Uploaded' : '✗ Missing'}</Text>
             </View>
 
             {/* T&C Box 1: Terms & Guidelines */}

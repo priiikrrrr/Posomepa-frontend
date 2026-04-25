@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, TouchableOpacity, FlatList, RefreshControl, StyleSheet, Platform, SafeAreaView } from 'react-native';
 import { useRouter, useFocusEffect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTheme } from '../../src/context/ThemeContext';
 import { spacesAPI } from '../../src/api/client';
@@ -18,43 +18,43 @@ export default function LikedScreen() {
   const colors = useThemeColors();
   const [refreshing, setRefreshing] = useState(false);
   const [likedIds, setLikedIds] = useState([]);
-  const [key, setKey] = useState(0);
+  const queryClient = useQueryClient();
 
   const loadLikedIds = async () => {
     try {
       const stored = await AsyncStorage.getItem(LIKED_STORAGE_KEY);
       if (stored) {
         setLikedIds(JSON.parse(stored));
+      } else {
+        setLikedIds([]);
       }
     } catch (error) {
       console.log('Error loading liked:', error);
+      setLikedIds([]);
     }
   };
 
   useFocusEffect(
     useCallback(() => {
+      queryClient.invalidateQueries({ queryKey: ['spaces'] });
       loadLikedIds();
     }, [])
   );
 
   const { data: spacesData, isLoading, refetch } = useQuery({
-    queryKey: ['spaces', 'all', key],
+    queryKey: ['spaces', 'all'],
     queryFn: () => spacesAPI.getAll({ limit: 100 }).then(res => res.data).catch(() => ({ spaces: [] })),
     retry: 1,
   });
-
-  useEffect(() => {
-    loadLikedIds();
-  }, [key]);
 
   const allSpaces = spacesData?.spaces || [];
   const likedSpaces = allSpaces.filter(space => likedIds.includes(space._id));
 
   const onRefresh = async () => {
     setRefreshing(true);
-    setKey(prev => prev + 1);
-    await refetch();
+    queryClient.invalidateQueries({ queryKey: ['spaces'] });
     await loadLikedIds();
+    await refetch();
     setRefreshing(false);
   };
 

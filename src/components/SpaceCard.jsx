@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet, FlatList, Dimensions, Animated, Alert } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
@@ -9,6 +9,7 @@ import { uiTheme, cardTheme } from '../utils/appTheme';
 import { useAuth } from '../context/AuthContext';
 import { reviewsAPI } from '../api/client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useFocusEffect } from 'expo-router';
 
 const LIKED_STORAGE_KEY = '@liked_spaces';
 const { width } = Dimensions.get('window');
@@ -85,18 +86,25 @@ const SpaceCard = ({ space, onPress, animationDelay = 0 }) => {
     },
   });
 
-  useEffect(() => {
-    const checkLiked = async () => {
-      try {
-        const stored = await AsyncStorage.getItem(LIKED_STORAGE_KEY);
-        if (stored) {
-          const likedIds = JSON.parse(stored);
-          setIsLiked(likedIds.includes(space._id));
+  useFocusEffect(
+    useCallback(() => {
+      const checkLiked = async () => {
+        try {
+          const stored = await AsyncStorage.getItem(LIKED_STORAGE_KEY);
+          if (stored) {
+            const likedIds = JSON.parse(stored);
+            setIsLiked(likedIds.includes(space._id));
+          } else {
+            setIsLiked(false);
+          }
+        } catch (e) { 
+          console.log('Error checking like:', e); 
+          setIsLiked(false);
         }
-      } catch (e) { console.log('Error checking like:', e); }
-    };
-    checkLiked();
-  }, [space._id]);
+      };
+      checkLiked();
+    }, [space._id])
+  );
 
   const images = space.images?.length > 0
     ? space.images.map(img => img.url || img)
